@@ -1,10 +1,17 @@
-let processes = []; //ex. [{p1, 0, 5, 1}, {p2, 1, 8, 0}]
-let result_FCFS = []; //ex. [{p1, 5, 5, 0}, {p2, 13, 12, 4}]
+
+let processes = []; //ex. [{p1, 0, 5, 1}, {p2, 1, 8, 0}] >> {name, arrivalTime, burstTime, priority}
+let result_FCFS = []; //ex. [{p1, 5, 5, 0}, {p2, 13, 12, 4}] >> {name, completionTime, turnAroundTime, waitingTime}
+let timeline_FCFS = []; //ex. [{p1, 0, 5}, {p2, 5, 13}] >> {name, start, end}
 let result_RR = [];
+let timeline_RR = []; //ex. [{p1, 0, 4}, {p2, 4, 8}, {p1, 8, 9}, {p2, 8, 12}] สมมุติ timequantum = 4
 let result_SJF = [];
+let timeline_SJF = [];
 let result_SRTF = [];
+let timeline_SRTF = [];
 let result_HRRN = [];
+let timeline_HRRN = [];
 let result_MQWF = [];
+let timeline_MQWF = [];
 let timequantum = 1;
 
 // ตัวอย่างที่คิดว่าจะใช้กับข้อมูล
@@ -16,8 +23,6 @@ function addProcess() {
 
     processes.push({ name: processName, arrivalTime: arrivalTime, burstTime: burstTime, priority: priority });
 }
-
-//-----------------------------------------
 
 function sortting(){
     // Sort processes โดยเรียงตาม arrival time จาก น้อย ไป มาก
@@ -37,6 +42,7 @@ function FCFS() {
         let waitingTime = turnAroundTime - process.burstTime;
         
         result_FCFS.push({ name: process.name, completionTime: completionTime, turnAroundTime: turnAroundTime, waitingTime: waitingTime });
+        timeline_FCFS.push({ name: process.name, start: startTime, end: completionTime });
 
         currentTime = completionTime;
     }); 
