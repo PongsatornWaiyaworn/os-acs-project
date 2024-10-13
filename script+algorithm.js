@@ -14,7 +14,8 @@ let result_MQWF = [];
 let timeline_MQWF = [];
 let timequantum = 1;
 
-// ตัวอย่างที่คิดว่าจะใช้กับข้อมูล
+// ตัวอย่างที่คิดว่าจะใช้กับข้อมูล 
+/*
 function addProcess() {
     let processName = document.getElementById("processName").value;
     let arrivalTime = parseInt(document.getElementById("arrivalTime").value);
@@ -23,6 +24,7 @@ function addProcess() {
 
     processes.push({ name: processName, arrivalTime: arrivalTime, burstTime: burstTime, priority: priority });
 }
+*/
 
 function sorting(){
     // Sort processes โดยเรียงตาม arrival time จาก น้อย ไป มาก
