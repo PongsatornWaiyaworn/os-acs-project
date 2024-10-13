@@ -24,14 +24,14 @@ function addProcess() {
     processes.push({ name: processName, arrivalTime: arrivalTime, burstTime: burstTime, priority: priority });
 }
 
-function sortting(){
+function sorting(){
     // Sort processes โดยเรียงตาม arrival time จาก น้อย ไป มาก
     return processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
 }
 
 function FCFS() {
 
-    let copy_process = sortting();
+    let copy_process = sorting();
     
     let currentTime = 0;
 
