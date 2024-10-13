@@ -45,11 +45,11 @@ function sortPriority(){
 function CPUutilizationCal(timeline, EndCompletionTime){
     let CPUtime = 0;
     timeline.forEach(element => { CPUtime += (element.end - element.start); });
-    return (CPUtime/EndCompletionTime)*100 ;
+    return (CPUtime / EndCompletionTime) * 100 ;
 }
 
 function ThroughputCal(NumProcess, EndCompletionTime){
-    return NumProcess/EndCompletionTime;
+    return NumProcess / EndCompletionTime;
 }
 
 function avgTurnAroundTime(result){
