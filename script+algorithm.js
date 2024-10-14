@@ -104,7 +104,7 @@ function RR() {
     let currentTime = 0;
     let lastCompletionTime = 0;
 
-    queue.push(...copy_process.filter(process => process.arrivalTime >= currentTime));
+    queue.push(...copy_process);
 
     while (queue.length > 0 || copy_process.some(process => process.burstTime > 0)) {
         if (queue.length === 0) {
