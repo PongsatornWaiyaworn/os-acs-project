@@ -106,14 +106,7 @@ function RR() {
 
     queue.push(...copy_process);
 
-    while (queue.length > 0 || copy_process.some(process => process.burstTime > 0)) {
-        if (queue.length === 0) {
-            currentTime = Math.min(...copy_process
-                .filter(process => process.burstTime > 0)
-                .map(process => process.arrivalTime));
-            queue.push(...copy_process.filter(process => process.arrivalTime <= currentTime && process.burstTime > 0));
-        }
-
+    while (queue.length > 0) {
         let currentProcess = queue.shift();
         let startTime = currentTime;
         let timeToExecute = Math.min(timequantum, currentProcess.burstTime);
@@ -141,11 +134,6 @@ function RR() {
         } else {
             queue.push(currentProcess);
         }
-
-        let newProcesses = copy_process.filter(
-            process => process.arrivalTime <= currentTime && process.burstTime > 0 && !queue.includes(process)
-        );
-        queue.push(...newProcesses);
     }
 
     efficiency_RR = {
