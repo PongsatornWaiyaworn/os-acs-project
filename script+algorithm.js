@@ -65,16 +65,16 @@ function avgWaitingTime(result){
 }
 
 function FCFS() {
-    let copy_process = sortArrivaltime();
+    let copy_process = sortArrivaltime().slice();
     
     let currentTime = 0;
     let lastCompletionTime = 0;
-
+ 
     copy_process.forEach(process => {
         let startTime = Math.max(currentTime, process.arrivalTime);
-        let completionTime = startTime + process.burstTime;
-        let turnAroundTime = completionTime - process.arrivalTime;
-        let waitingTime = turnAroundTime - process.burstTime;
+        let completionTime = startTime + process.burstTime; //ผิด
+        let turnAroundTime = completionTime - process.arrivalTime; //ผิด
+        let waitingTime = turnAroundTime - process.burstTime; //ผิด
         
         result_FCFS.push({ 
             name: process.name, 
@@ -103,39 +103,46 @@ function RR() {
     let queue = [];
     let currentTime = 0;
     let lastCompletionTime = 0;
-
+    
+    let remainingBurst = {};
+    copy_process.forEach(process => {
+        remainingBurst[process.name] = process.burstTime;
+    });
+    
     queue.push(...copy_process);
-
+    
     while (queue.length > 0) {
+            
         let currentProcess = queue.shift();
         let startTime = currentTime;
-        let timeToExecute = Math.min(timequantum, currentProcess.burstTime);
-
-        currentProcess.burstTime -= timeToExecute;
+        let timeToExecute = Math.min(timequantum, remainingBurst[currentProcess.name]);
         currentTime += timeToExecute;
-
+        remainingBurst[currentProcess.name] -= timeToExecute;
+    
         timeline_RR.push({ name: currentProcess.name, start: startTime, end: currentTime });
-
-        if (currentProcess.burstTime === 0) {
+    
+        if (remainingBurst[currentProcess.name] === 0) {
             let completionTime = currentTime;
             let turnAroundTime = completionTime - currentProcess.arrivalTime;
-            let waitingTime = turnAroundTime - (currentProcess.burstTime + timeToExecute);  
-
+            let waitingTime = turnAroundTime - currentProcess.burstTime;
+    
             result_RR.push({
                 name: currentProcess.name,
                 arrivalTime: currentProcess.arrivalTime,
-                burstTime: currentProcess.burstTime + timeToExecute,
+                burstTime: currentProcess.burstTime,
                 completionTime: completionTime,
                 turnAroundTime: turnAroundTime,
                 waitingTime: waitingTime
             });
-
+    
             lastCompletionTime = completionTime;
-        } else {
+        }
+    
+        if (remainingBurst[currentProcess.name] > 0) {
             queue.push(currentProcess);
         }
     }
-
+    
     efficiency_RR = {
         CPUutilization: CPUutilizationCal(timeline_RR, lastCompletionTime),
         Throughput: ThroughputCal(result_RR.length, lastCompletionTime),
