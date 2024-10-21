@@ -93,7 +93,7 @@ function FCFS() {
     });
 
     efficiency_FCFS = {CPUutilization: CPUutilizationCal(timeline_FCFS, lastCompletionTime), 
-        Throughput: ThroughputCal(timeline_FCFS, lastCompletionTime), 
+        Throughput: ThroughputCal(timeline_FCFS.length, lastCompletionTime), 
         avgTurnAroundTime: avgTurnAroundTime(result_FCFS), 
         avgWaitingTime: avgWaitingTime(result_FCFS)} ;
 }
