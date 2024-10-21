@@ -72,9 +72,9 @@ function FCFS() {
  
     copy_process.forEach(process => {
         let startTime = Math.max(currentTime, process.arrivalTime);
-        let completionTime = startTime + process.burstTime; //ผิด
-        let turnAroundTime = completionTime - process.arrivalTime; //ผิด
-        let waitingTime = turnAroundTime - process.burstTime; //ผิด
+        let completionTime = startTime + process.burstTime; 
+        let turnAroundTime = completionTime - process.arrivalTime; 
+        let waitingTime = turnAroundTime - process.burstTime; 
         
         result_FCFS.push({ 
             name: process.name, 
