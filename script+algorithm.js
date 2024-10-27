@@ -22,14 +22,9 @@ let timequantum = 1;
 
 // ตัวอย่างที่คิดว่าจะใช้กับข้อมูล 
 /*
-function addProcess() {
-    let processName = document.getElementById("processName").value;
-    let arrivalTime = parseInt(document.getElementById("arrivalTime").value);
-    let burstTime = parseInt(document.getElementById("burstTime").value);
-    let priority = parseInt(document.getElementById("priority").value);
 
     processes.push({ name: processName, arrivalTime: arrivalTime, burstTime: burstTime, priority: priority });
-}
+
 */
 
 function sortArrivaltime(){
