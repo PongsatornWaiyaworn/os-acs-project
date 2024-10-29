@@ -162,7 +162,7 @@ function MQWF() {
         }
     });
 
-    queues.sort((a, b) => a.priority - b.priority);
+    queues = sortPriority(queues);
 
     let currentTime = 0;
     let lastCompletionTime = 0;
