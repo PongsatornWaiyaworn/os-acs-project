@@ -1,22 +1,22 @@
 
-let processes = []; //ex. [{p1, 0, 5, 1}, {p2, 1, 8, 0}] >> {name, arrivalTime, burstTime, priority}
-let result_FCFS = []; //ex. [{p1, 0, 5, 5, 5, 0}, {p2, 1, 8,13, 12, 4}] >> {name, arrivalTime, burstTime, completionTime, turnAroundTime, waitingTime}
-let timeline_FCFS = []; //ex. [{p1, 0, 5}, {p2, 5, 13}] >> {name, start, end}
+const processes = []; //ex. [{p1, 0, 5, 1}, {p2, 1, 8, 0}] >> {name, arrivalTime, burstTime, priority}
+const result_FCFS = []; //ex. [{p1, 0, 5, 5, 5, 0}, {p2, 1, 8,13, 12, 4}] >> {name, arrivalTime, burstTime, completionTime, turnAroundTime, waitingTime}
+const timeline_FCFS = []; //ex. [{p1, 0, 5}, {p2, 5, 13}] >> {name, start, end}
 let efficiency_FCFS = {}; //ex. {CPUutilization: 100, Throughput: 0.15384615384615385, avgTurnAroundTime: 8.5, avgWaitingTime: 2}
-let result_RR = [];
-let timeline_RR = []; //ex. [{p1, 0, 4}, {p2, 4, 8}, {p1, 8, 9}, {p2, 8, 12}] >> สมมุติ timequantum = 4,  {name, start, end}
+const result_RR = [];
+const timeline_RR = []; //ex. [{p1, 0, 4}, {p2, 4, 8}, {p1, 8, 9}, {p2, 8, 12}] >> สมมุติ timequantum = 4,  {name, start, end}
 let efficiency_RR = {};
-let result_SJF = [];
-let timeline_SJF = [];
+const result_SJF = [];
+const timeline_SJF = [];
 let efficiency_SJF = {};
-let result_SRTF = [];
-let timeline_SRTF = [];
+const result_SRTF = [];
+const timeline_SRTF = [];
 let efficiency_SRTF = {};
-let result_HRRN = [];
-let timeline_HRRN = [];
+const result_HRRN = [];
+const timeline_HRRN = [];
 let efficiency_HRRN = {};
-let result_MQWF = [];
-let timeline_MQWF = [];
+const result_MQWF = [];
+const timeline_MQWF = [];
 let efficiency_MQWF = {};
 let timequantum = 1;
 
