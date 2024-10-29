@@ -27,14 +27,14 @@ let timequantum = 1;
 
 */
 
-function sortArrivaltime(){
+function sortArrivaltime(process){
     // Sort processes โดยเรียงตาม arrival time จากน้อยไปมาก
-    return processes.sort((a, b) => a.arrivalTime - b.arrivalTime);
+    return process.sort((a, b) => a.arrivalTime - b.arrivalTime);
 }
 
-function sortPriority(){
+function sortPriority(process){
     // Sort processes โดยเรียงตาม priority จากน้อยไปมาก
-    return processes.sort((a, b) => a.priority - b.priority);
+    return process.sort((a, b) => a.priority - b.priority);
 }
 
 function CPUutilizationCal(timeline, EndCompletionTime){
@@ -60,8 +60,7 @@ function avgWaitingTime(result){
 }
 
 function FCFS() {
-    let copy_process = sortArrivaltime().slice();
-    
+    let copy_process = sortArrivaltime(processes).slice();
     let currentTime = 0;
     let lastCompletionTime = 0;
  
@@ -94,7 +93,7 @@ function FCFS() {
 }
 
 function RR() {
-    let copy_process = sortArrivaltime();
+    let copy_process = sortArrivaltime(processes).slice();
     let queue = [];
     let currentTime = 0;
     let lastCompletionTime = 0;
@@ -143,5 +142,103 @@ function RR() {
         Throughput: ThroughputCal(result_RR.length, lastCompletionTime),
         avgTurnAroundTime: avgTurnAroundTime(result_RR),
         avgWaitingTime: avgWaitingTime(result_RR)
+    };
+}
+
+function MQWF() {
+    let timeq = 4; 
+    let queues = [];
+    let uniquePriorities = new Set();
+
+    processes.forEach(process => {
+        uniquePriorities.add(process.priority);
+    });
+
+    let maxPriority = Math.max(...uniquePriorities);
+
+    uniquePriorities.forEach(priority => {
+        if (priority !== maxPriority) {
+            queues.push({ priority: priority, quantum: timeq, processes: [] });
+            timeq *= 2;
+        } else {
+            queues.push({ priority: priority, quantum: 0, processes: [] });
+        }
+    });
+
+    queues.sort((a, b) => a.priority - b.priority);
+
+    let currentTime = 0;
+    let lastCompletionTime = 0;
+
+    let copy_process = sortArrivaltime(processes).slice();
+    copy_process.forEach(process => {
+        let targetQueue = queues.find(queue => queue.priority === process.priority);
+        if (targetQueue) {
+            targetQueue.processes.push(process);
+        }
+    });
+
+    let remainingBurst = {};
+    copy_process.forEach(process => {
+        remainingBurst[process.name] = process.burstTime;
+    });
+
+    while (queues.some(queue => queue.processes.length > 0)) {
+        let foundProcess = false;
+
+        for (let i = 0; i < queues.length; i++) {
+            let queue = queues[i];
+
+            if (queue.processes.length > 0) {
+                foundProcess = true;
+                let currentProcess = queue.processes.shift();
+                let startTime = currentTime;
+
+                let timeToExecute = queue.quantum > 0
+                    ? Math.min(queue.quantum, remainingBurst[currentProcess.name])
+                    : remainingBurst[currentProcess.name];
+
+                currentTime += timeToExecute;
+                remainingBurst[currentProcess.name] -= timeToExecute;
+
+                timeline_MQWF.push({ name: currentProcess.name, start: startTime, end: currentTime });
+
+                if (remainingBurst[currentProcess.name] === 0) {
+                    let completionTime = currentTime;
+                    let turnAroundTime = completionTime - currentProcess.arrivalTime;
+                    let waitingTime = turnAroundTime - currentProcess.burstTime;
+
+                    result_MQWF.push({
+                        name: currentProcess.name,
+                        arrivalTime: currentProcess.arrivalTime,
+                        burstTime: currentProcess.burstTime,
+                        completionTime: completionTime,
+                        turnAroundTime: turnAroundTime,
+                        waitingTime: waitingTime
+                    });
+
+                    lastCompletionTime = completionTime;
+                } else {
+                    if (i + 1 < queues.length) {
+                        queues[i + 1].processes.push(currentProcess);
+                    } else {
+                        queues[i].processes.push(currentProcess);
+                    }
+                }
+
+                break;
+            }
+        }
+
+        if (!foundProcess) {
+            currentTime = Math.max(currentTime, copy_process[0]?.arrivalTime || currentTime);
+        }
+    }
+
+    efficiency_MQWF = {
+        CPUutilization: CPUutilizationCal(timeline_MQWF, lastCompletionTime),
+        Throughput: ThroughputCal(result_MQWF.length, lastCompletionTime),
+        avgTurnAroundTime: avgTurnAroundTime(result_MQWF),
+        avgWaitingTime: avgWaitingTime(result_MQWF)
     };
 }
