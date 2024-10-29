@@ -115,7 +115,7 @@ function RR() {
     
         timeline_RR.push({ name: currentProcess.name, start: startTime, end: currentTime });
     
-        if (remainingBurst[currentProcess.name] === 0) {
+        if (remainingBurst[currentProcess.name] === 0) { //ถ้า process ทำงานเสร็จ
             let completionTime = currentTime;
             let turnAroundTime = completionTime - currentProcess.arrivalTime;
             let waitingTime = turnAroundTime - currentProcess.burstTime;
@@ -130,9 +130,7 @@ function RR() {
             });
     
             lastCompletionTime = completionTime;
-        }
-    
-        if (remainingBurst[currentProcess.name] > 0) {
+        }else if (remainingBurst[currentProcess.name] > 0) { //ถ้ายังไม่เสร็จก็เพิ่มกลับเข้าคิว
             queue.push(currentProcess);
         }
     }
@@ -146,7 +144,7 @@ function RR() {
 }
 
 function MQWF() {
-    let timeq = 4; 
+    let timeq = timequantum; 
     let queues = [];
     let uniquePriorities = new Set();
 
@@ -155,8 +153,7 @@ function MQWF() {
     });
 
     let maxPriority = Math.max(...uniquePriorities);
-
-    uniquePriorities.forEach(priority => {
+    uniquePriorities.forEach(priority => { //สร้างคิวโดยที่มีค่าของ priority มากสุดทำ FCFS นอกนั้นทำ RR โดยมี quantum time เพิ่มขึ้นทีละ 2n
         if (priority !== maxPriority) {
             queues.push({ priority: priority, quantum: timeq, processes: [] });
             timeq *= 2;
@@ -169,7 +166,6 @@ function MQWF() {
 
     let currentTime = 0;
     let lastCompletionTime = 0;
-
     let copy_process = sortArrivaltime(processes).slice();
     copy_process.forEach(process => {
         let targetQueue = queues.find(queue => queue.priority === process.priority);
@@ -194,9 +190,9 @@ function MQWF() {
                 let currentProcess = queue.processes.shift();
                 let startTime = currentTime;
 
-                let timeToExecute = queue.quantum > 0
+                let timeToExecute = queue.quantum > 0 
                     ? Math.min(queue.quantum, remainingBurst[currentProcess.name])
-                    : remainingBurst[currentProcess.name];
+                    : remainingBurst[currentProcess.name]; //ถ้า quantum เป็น 0 ก็จะให้ timeToExecute เป็น remainingBurst ที่เหลือ (เป็นการทำ FCFS)
 
                 currentTime += timeToExecute;
                 remainingBurst[currentProcess.name] -= timeToExecute;
@@ -219,10 +215,9 @@ function MQWF() {
 
                     lastCompletionTime = completionTime;
                 } else {
+                    // process ยังไม่เสร็จ จะถูกย้ายไปคิวต่อไป(ถ้าไม่ใช่คิวสุดท้าย)
                     if (i + 1 < queues.length) {
                         queues[i + 1].processes.push(currentProcess);
-                    } else {
-                        queues[i].processes.push(currentProcess);
                     }
                 }
 
@@ -231,6 +226,7 @@ function MQWF() {
         }
 
         if (!foundProcess) {
+            // ถ้าไม่มี process ในคิวใด ๆ ให้ currentTime เลื่อนไปยัง arrivalTime ของ process ต่อไป
             currentTime = Math.max(currentTime, copy_process[0]?.arrivalTime || currentTime);
         }
     }
