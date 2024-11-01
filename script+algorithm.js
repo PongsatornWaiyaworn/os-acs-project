@@ -18,6 +18,9 @@ let efficiency_HRRN = {};
 const result_MQWF = [];
 const timeline_MQWF = [];
 let efficiency_MQWF = {};
+const result_P = [];
+const timeline_P = [];
+let efficiency_P = {};
 let timequantum = 1;
 
 // ตัวอย่างที่คิดว่าจะใช้กับข้อมูล 
