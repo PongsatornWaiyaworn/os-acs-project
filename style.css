@@ -1,0 +1,39 @@
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+#ganttCharts {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ganttChart {
+    /* display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto; */
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.ganttChart h3 {
+    margin: 0;
+    padding: 5px 0;
+    font-size: 1.2em;
+    color: #333;
+    text-align: center;
+}
+
+.ganttTask {
+    display: inline-block;
+    padding: 10px;
+    margin: 5px 2px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 0.7em;
+}
