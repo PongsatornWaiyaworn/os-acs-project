@@ -7,5 +7,48 @@
 </head>
 <body>
     <h1>Scheduler Algorithm</h1>
+    <div class="Select-Algorithm">
+        <h3>Algorithm</h3>
+        <form class="Input-Algorithm">
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+        </form>
+    </div>
+    <div class="Quantum-Time">
+        <label><input type="number" name="Time" min="1" step="1" value="1">Quantum-Time</label>
+    </div>
+    <div class="Input-Process">
+        <div class="Head-Input">
+                <input type="number" min="1" step="1">
+                <button type="button" class="random" onclick="">random</button> 
+                <button type="button" class="add" onclick="">add-process</button> 
+                <button type="button" class="reset" onclick="">reset</button> 
+        </div>
+        <table class="Main-Table">
+            <thead>
+                <tr>
+                    <th class="process-id">Process ID</th> 
+                        <th class="arrival-time">Arrival Time</th> 
+                        <th class="burst-time" colspan="1">Burst Time</th> 
+                        <th class="priority">Priority</th> 
+                        <th class="delete-process"></th>
+                </tr>
+            </thead>
+            <tbody id="Process-Table-Body"><tr>
+                <td class="process-id" id="name">P1</td> 
+                        <td class="arrival-time" id="arrival"><input type="number" min="0" step="1" value="0"> </td> 
+                        <td class="burst-time" id="burst"><input type="number" min="1" step="1" value="1"> </td> 
+                        <td class="priority" id="priority"><input type="number" min="1" step="1" value="1"></td> 
+                        <td class="delete-process"></td>
+            </tr></tbody>
+        </table>
+        <button type="button" class="Calculate" onclick="">Calculate</button>
+    </div>
+
 </body>
 </html>
