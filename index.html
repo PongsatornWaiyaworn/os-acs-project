@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,34 +40,99 @@
                 <thead> 
                     <tr> 
                         <th class="process-id">Process ID</th> 
+=======
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Scheduling Algorithm Comparision</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Scheduler Algorithm</h1>
+    <div class="Select-Algorithm">
+        <h3>Algorithm</h3>
+        <form class="Input-Algorithm">
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+            <label><input type="checkbox" name="FCFS" value="fcfs">First-Come, First-Serve</label>
+        </form>
+    </div>
+    <div class="Quantum-Time">
+        <label><input type="number" name="Time" min="1" step="1" value="1">Quantum-Time</label>
+    </div>
+    <div class="Input-Process">
+        <div class="Head-Input">
+                <input type="number" min="1" step="1">
+                <button type="button" class="random" onclick="">random</button> 
+                <button type="button" class="add" onclick="">add-process</button> 
+                <button type="button" class="reset" onclick="">reset</button> 
+        </div>
+        <table class="Main-Table">
+            <thead>
+                <tr>
+                    <th class="process-id">Process ID</th> 
+>>>>>>> bad6006be82657191d29be30ba18606df1bb1af0
                         <th class="arrival-time">Arrival Time</th> 
                         <th class="burst-time" colspan="1">Burst Time</th> 
                         <th class="priority">Priority</th> 
                         <th class="delete-process"></th>
+<<<<<<< HEAD
                     </tr> 
                 </thead> 
                 <tbody id="process-table-body"> 
                     <tr> 
                         <td class="process-id" id="name">P1</td> 
+=======
+                </tr>
+            </thead>
+            <tbody id="Process-Table-Body"><tr>
+                <td class="process-id" id="name">P1</td> 
+>>>>>>> bad6006be82657191d29be30ba18606df1bb1af0
                         <td class="arrival-time" id="arrival"><input type="number" min="0" step="1" value="0"> </td> 
                         <td class="burst-time" id="burst"><input type="number" min="1" step="1" value="1"> </td> 
                         <td class="priority" id="priority"><input type="number" min="1" step="1" value="1"></td> 
                         <td class="delete-process"></td>
+<<<<<<< HEAD
                     </tr> 
                 </tbody> 
             </table> 
             <button type="button" class="calculate-btn" onclick="calculate()">Calculate</button>
         </div>
 
+=======
+            </tr></tbody>
+        </table>
+        <button type="button" class="Calculate" onclick="">Calculate</button>
+    </div>
+>>>>>>> bad6006be82657191d29be30ba18606df1bb1af0
     <div id="charts">
         <div id="ganttCharts">
             <h3>Gantt Charts</h3>
         </div>
+<<<<<<< HEAD
         <div id="comparisonChart-hidden">
+=======
+        <div>
+>>>>>>> bad6006be82657191d29be30ba18606df1bb1af0
             <h3>Comparision Graph</h3>
             <canvas id="comparisonChart"></canvas>
         </div> 
     </div>
 
+<<<<<<< HEAD
 </body>
 </html>
+=======
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script+algorithm.js"></script> <!--คำนวณ algorithm -->
+    <script src="output.js"></script>
+</body>
+</html>
+>>>>>>> bad6006be82657191d29be30ba18606df1bb1af0
