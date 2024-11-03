@@ -51,6 +51,43 @@ function runComparison() {
     }
 }
 
+function displayGanttCharts(results) {
+    const ganttContainer = document.getElementById('ganttCharts');
+    ganttContainer.innerHTML = ''; 
+
+    results.forEach(result => {
+        const chartDiv = document.createElement('div');
+        chartDiv.classList.add('ganttChart');
+        chartDiv.innerHTML = `<h5>${result.name} Gantt Chart</h5>`;
+
+        const totalTime = result.timeline[result.timeline.length - 1].end;
+        
+        const timelineDiv = document.createElement('div');
+        timelineDiv.classList.add('timeline');
+
+        // เพิ่มเฉพาะเวลาเริ่มต้นที่ 0 ที่จุดเริ่มต้นของแถบ Gantt
+        const startMarker = document.createElement('span');
+        startMarker.classList.add('timeMarker');
+        startMarker.style.left = `0%`;
+        startMarker.innerText = result.timeline[0].start;
+        timelineDiv.appendChild(startMarker);
+
+        result.timeline.forEach((task, index) => {
+            const taskDiv = document.createElement('div');
+            taskDiv.classList.add('ganttTask');
+            
+            const taskDuration = task.end - task.start;
+            taskDiv.style.width = `${(taskDuration / totalTime) * 100}%`;
+            taskDiv.innerHTML = `${task.name} <span class="end-time">${task.end}</span>`;
+            
+            timelineDiv.appendChild(taskDiv);
+        });
+
+        chartDiv.appendChild(timelineDiv);
+        ganttContainer.appendChild(chartDiv);
+    });
+}
+
 function displayComparisonChart(results) {
     const ctx = document.getElementById('comparisonChart').getContext('2d');
     const labels = results.map(result => result.name);
