@@ -182,6 +182,10 @@ button.calculate-btn:hover {
 
 /*------------------------------------------------------------------------------ */
 
+#ganttCharts, #comparisonChart-hidden {
+    visibility: hidden;
+}
+
 .ganttChart {
     margin: 20px 0;
 }
