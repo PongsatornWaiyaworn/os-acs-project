@@ -49,6 +49,10 @@ function runComparison() {
                     RR();
                     results.push({ name: "RR", efficiency: efficiency_RR, timeline: timeline_RR });
                     break;
+                case 'sjf':
+                    SJF();
+                    results.push({ name: "SJF", efficiency: efficiency_SJF, timeline: timeline_SJF });
+                    break;
                 case 'srtf':
                     SRTF();
                     results.push({ name: "SRTF", efficiency: efficiency_SRTF, timeline: timeline_SRTF });
