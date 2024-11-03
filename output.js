@@ -2,22 +2,41 @@ function runComparison() {
     //เก็บค่าการเลือก algorithm
     const selectedAlgorithms = [...document.querySelectorAll('input[name="algorithms"]:checked')].map(input => input.value);
 
-    //เรียกใช้ตามที่เลือก
-    const results = selectedAlgorithms.map(algorithm => {
-        switch (algorithm) {
-            case "FCFS":
-                FCFS();
-                return { name: "FCFS", efficiency: efficiency_FCFS, timeline: timeline_FCFS };
-            case "RR":
-                RR();
-                return { name: "RR", efficiency: efficiency_RR, timeline: timeline_RR };
-            case "MQWF":
-                MQWF();
-                return { name: "MQWF", efficiency: efficiency_MQWF, timeline: timeline_MQWF };
-            default:
-                return null;
-        }
-    });
+    if (selectedAlgorithms.length > 0) {
+        selectedAlgorithms.forEach(algorithm => {
+            switch (algorithm) {
+                case 'fcfs':
+                    FCFS();
+                    results.push({ name: "FCFS", efficiency: efficiency_FCFS, timeline: timeline_FCFS });
+                    break;
+                case 'rr':
+                    RR();
+                    results.push({ name: "RR", efficiency: efficiency_RR, timeline: timeline_RR });
+                    break;
+                case 'sjf':
+                    SJF();
+                    results.push({ name: "SJF", efficiency: efficiency_SJF, timeline: timeline_SJF });
+                    break;
+                case 'srtf':
+                    SRTF();
+                    results.push({ name: "SRTF", efficiency: efficiency_SRTF, timeline: timeline_SRTF });
+                    break;
+                case 'p':
+                    PriorityScheduling();
+                    results.push({ name: "Priority", efficiency: efficiency_P, timeline: timeline_P });
+                    break;
+                case 'hrrn':
+                    HRRN();
+                    results.push({ name: "HRRN", efficiency: efficiency_HRRN, timeline: timeline_HRRN });
+                    break;
+                case 'mqwf':
+                    MQWF();
+                    results.push({ name: "MQWF", efficiency: efficiency_MQWF, timeline: timeline_MQWF });
+                    break;
+                default:
+                    break;
+            }
+        });
 
     //เรียกฟังก์ชันแสดงการเปรียบเทียบ
     displayGanttCharts(results);
