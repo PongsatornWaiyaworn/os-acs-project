@@ -189,7 +189,6 @@ button.calculate-btn:hover {
 
 .ganttChart {
     margin: 20px 0;
-    max-width: 100%;
 }
 
 .ganttChart h5 {
@@ -205,11 +204,9 @@ button.calculate-btn:hover {
 
 .timeline {
     position: relative;
-    max-width: 100%;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
     gap: 3px; 
-    padding-bottom: 30px;
 }
 
 .ganttTask {
@@ -217,7 +214,6 @@ button.calculate-btn:hover {
     color: #fff;
     text-align: center;
     padding: 5px;
-    margin-bottom: 30px;
     position: relative;
 }
 

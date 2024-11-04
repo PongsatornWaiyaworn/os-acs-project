@@ -46,7 +46,7 @@ function runComparison() {
         displayComparisonChart(results);
 
     } else {
-        alert("กรุณาเลือก Algorithm ด้วยนะ!!!");
+        alert("กรุณาเลือก Algorithm ที่ต้องการเปรียบเทียบ");
     }
 }
 
