@@ -466,3 +466,137 @@ let proc = [
 ];
 findAvgTime(proc, proc.length);
 
+
+function SJF() {
+    let copy_process = sortArrivaltime(processes).slice(); // เรียงโปรเซสตามเวลาที่เข้ามา
+    let currentTime = 0;
+    let lastCompletionTime = 0;
+    result_SJF = [];
+    timeline_SJF = [];
+    efficiency_SJF = {};
+
+    while (copy_process.length > 0) {
+        // ค้นหาโปรเซสที่เข้ามาก่อนและมีเวลาทำงานสั้นที่สุด
+        let availableProcesses = copy_process.filter(process => process.arrivalTime <= currentTime);
+        if (availableProcesses.length === 0) {
+            // หากไม่มีโปรเซสที่เข้ามา รอจนกว่าจะมีโปรเซสเข้ามา
+            currentTime = copy_process[0].arrivalTime;
+            continue;
+        }
+
+        // เรียงโปรเซสตาม burst time
+        availableProcesses.sort((a, b) => a.burstTime - b.burstTime);
+        let currentProcess = availableProcesses[0]; // โปรเซสที่มีเวลาทำงานสั้นที่สุด
+
+        // คำนวณเวลาที่ใช้ในการทำงาน
+        let startTime = currentTime;
+        let completionTime = startTime + currentProcess.burstTime;
+        let turnAroundTime = completionTime - currentProcess.arrivalTime; 
+        let waitingTime = turnAroundTime - currentProcess.burstTime; 
+        let responseTime = startTime - currentProcess.arrivalTime;
+
+        // เก็บผลลัพธ์
+        result_SJF.push({
+            name: currentProcess.name,
+            completionTime: completionTime,
+            turnAroundTime: turnAroundTime,
+            waitingTime: waitingTime,
+            responseTime: responseTime
+        });
+
+        timeline_SJF.push({ 
+            name: currentProcess.name, 
+            start: startTime, 
+            end: completionTime 
+        });
+
+        // อัปเดตเวลา
+        currentTime = completionTime + contextSwitch; // เพิ่มเวลา context switch
+        lastCompletionTime = completionTime;
+
+        // ลบโปรเซสที่เสร็จสิ้นออกจากคิว
+        copy_process = copy_process.filter(process => process.name !== currentProcess.name);
+    }
+
+    // คำนวณประสิทธิภาพ
+    efficiency_SJF = {
+        CPUutilization: CPUutilizationCal(lastCompletionTime),
+        Throughput: ThroughputCal(timeline_SJF.length, lastCompletionTime),
+        avgTurnAroundTime: avgTurnAroundTime(result_SJF),
+        avgWaitingTime: avgWaitingTime(result_SJF),
+        avgResponseTime: avgResponseTime(result_SJF)
+    };
+}
+
+function HRRN() {
+    result_HRRN = [];
+    timeline_HRRN = [];
+    efficiency_HRRN = {};
+    let currentTime = 0;
+    let lastCompletionTime = 0;
+    let copy_process = sortArrivaltime(processes).slice(); // คัดลอกและเรียงตามเวลามาถึง
+
+    while (copy_process.length > 0) {
+        // กรองกระบวนการที่สามารถเข้าถึงได้
+        let availableProcesses = copy_process.filter(process => process.arrivalTime <= currentTime);
+
+        if (availableProcesses.length === 0) {
+            // ถ้าไม่มีโปรเซสที่สามารถทำงานได้ ข้ามไปยังเวลาถัดไป
+            currentTime++;
+            continue;
+        }
+
+        // คำนวณ Response Ratio
+        availableProcesses.forEach(process => {
+            process.responseRatio = ((currentTime - process.arrivalTime) + process.burstTime) / process.burstTime;
+        });
+
+        // เลือกโปรเซสที่มี Response Ratio สูงสุด
+        let selectedProcess = availableProcesses.reduce((prev, current) => {
+            if (prev.responseRatio > current.responseRatio) {
+                return prev;
+            } else if (prev.responseRatio < current.responseRatio) {
+                return current;
+            } else {
+                let prevNum = parseInt(prev.name.replace(/\D/g, ''), 10);
+                let currentNum = parseInt(current.name.replace(/\D/g, ''), 10);
+                return prevNum < currentNum ? prev : current;
+            }
+        });
+
+        // ปรับเวลาปัจจุบันกับกระบวนการที่เลือก
+        currentTime += selectedProcess.burstTime;
+        
+        // คำนวณค่าเวลาในการเสร็จสิ้น
+        let completionTime = currentTime;
+        let turnAroundTime = completionTime - selectedProcess.arrivalTime;
+        let waitingTime = turnAroundTime - selectedProcess.burstTime;
+        let responseTime = completionTime - selectedProcess.arrivalTime - selectedProcess.burstTime;
+
+        // บันทึกผลลัพธ์
+        result_HRRN.push({
+            name: selectedProcess.name,
+            arrivalTime: selectedProcess.arrivalTime,
+            burstTime: selectedProcess.burstTime,
+            completionTime: completionTime,
+            turnAroundTime: turnAroundTime,
+            waitingTime: waitingTime,
+            responseTime: responseTime 
+        });
+
+        timeline_HRRN.push({ name: selectedProcess.name, start: currentTime - selectedProcess.burstTime, end: currentTime });
+
+        // ลบโปรเซสที่เลือกออกจากคัดลอก
+        copy_process = copy_process.filter(process => process.name !== selectedProcess.name);
+        lastCompletionTime = completionTime; // อัปเดตเวลาที่เสร็จสิ้นล่าสุด
+    }    
+
+    // คำนวณประสิทธิภาพ
+    efficiency_HRRN = {
+        CPUutilization: CPUutilizationCal(lastCompletionTime),
+        Throughput: ThroughputCal(result_HRRN.length, lastCompletionTime),
+        avgTurnAroundTime: avgTurnAroundTime(result_HRRN),
+        avgWaitingTime: avgWaitingTime(result_HRRN),
+        avgResponseTime: avgResponseTime(result_HRRN) 
+    };
+}
