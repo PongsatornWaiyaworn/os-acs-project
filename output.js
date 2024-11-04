@@ -120,22 +120,22 @@ function displayComparisonChart(results) {
                 {
                     label: 'CPU Utilization (%)',
                     data: results.map(result => result.efficiency.CPUutilization),
-                    backgroundColor: '#595959'
+                    backgroundColor: '#E3242B'
                 },
                 {
                     label: 'Average Waiting Time',
                     data: results.map(result => result.efficiency.avgWaitingTime),
-                    backgroundColor: '#999999'
+                    backgroundColor: '#610C04'
                 },
                 {
                     label: 'Average Turnaround Time',
                     data: results.map(result => result.efficiency.avgTurnAroundTime),
-                    backgroundColor: '#555555'
+                    backgroundColor: '#A91B0D'
                 },
                 {
                     label: 'Average Response Time',
                     data: results.map(result => result.efficiency.avgResponseTime),
-                    backgroundColor: '#111111'
+                    backgroundColor: '#420C09'
                 }
             ]
         },
