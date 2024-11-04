@@ -128,7 +128,6 @@ function CPUutilizationCal(EndCompletionTime) {
     return (CPUtime / EndCompletionTime) * 100.00;
 }
 
-
 function ThroughputCal(NumProcess, EndCompletionTime){
     return NumProcess / EndCompletionTime;
 }
@@ -214,7 +213,9 @@ function RR() {
         currentProcess = queue.shift();
     
         if (currentProcess.arrivalTime > currentTime) {
-            currentTime = currentProcess.arrivalTime;
+            queue.splice(1, 0, currentProcess);
+            currentTime++;
+            continue;
         }
     
         let startTime = currentTime;
@@ -315,7 +316,9 @@ function MQWF() {
                 let currentProcess = queue.processes[0]; 
     
                 if (currentProcess.arrivalTime > currentTime) {
-                    currentTime = currentProcess.arrivalTime;
+                    queue.processes.splice(1, 0, currentProcess);
+                    currentTime++;
+                    continue;
                 }
     
                 foundProcess = true;
