@@ -23,7 +23,6 @@ function runComparison() {
                     results.push({ name: "SRTF", efficiency: efficiency_SRTF, timeline: timeline_SRTF });
                     break;
                 case 'p':
-                    
                     results.push({ name: "Priority", efficiency: efficiency_P, timeline: timeline_P });
                     break;
                 case 'hrrn':
