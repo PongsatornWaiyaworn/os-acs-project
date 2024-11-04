@@ -376,4 +376,101 @@ function MQWF() {
         avgResponseTime: avgResponseTime(result_MQWF) 
     };
 }
+class Process {
+    constructor(pid, bt, art) {
+        this.pid = pid;    // Process ID
+        this.bt = bt;      // Burst Time
+        this.art = art;    // Arrival Time
+    }
+}
+
+// Function to find waiting time for all processes
+function findWaitingTime(proc, n, wt) {
+    let rt = new Array(n);
+   
+    // Copy burst times into rt[]
+    for (let i = 0; i < n; i++) {
+        rt[i] = proc[i].bt;
+    }
+   
+    let complete = 0, t = 0, minm = Number.MAX_VALUE;
+    let shortest = -1, finish_time;
+    let check = false;
+
+    while (complete !== n) {
+        minm = Number.MAX_VALUE;
+        
+        // Find process with minimum remaining time that has arrived
+        for (let j = 0; j < n; j++) {
+            if ((proc[j].art <= t) && (rt[j] < minm) && rt[j] > 0) {
+                minm = rt[j];
+                shortest = j;
+                check = true;
+            }
+        }
+
+        if (!check) {
+            t++;
+            continue;
+        }
+
+        // Reduce remaining time by one for the shortest process
+        rt[shortest]--;
+
+        // If a process is completed
+        if (rt[shortest] === 0) {
+            complete++;
+            check = false;
+
+            finish_time = t + 1;
+            wt[shortest] = finish_time - proc[shortest].bt - proc[shortest].art;
+
+            if (wt[shortest] < 0) {
+                wt[shortest] = 0;
+            }
+        }
+        
+        // Increment time
+        t++;
+    }
+}
+
+// Function to calculate turn around time
+function findTurnAroundTime(proc, n, wt, tat) {
+    for (let i = 0; i < n; i++) {
+        tat[i] = proc[i].bt + wt[i];
+    }
+}
+
+// Function to calculate average time and print the result
+function findAvgTime(proc, n) {
+    let wt = new Array(n), tat = new Array(n);
+    let total_wt = 0, total_tat = 0;
+
+    // Find waiting times and turnaround times
+    findWaitingTime(proc, n, wt);
+    findTurnAroundTime(proc, n, wt, tat);
+
+    console.log("P\tBT\tWT\tTAT");
+
+    // Calculate total waiting time and total turnaround time
+    for (let i = 0; i < n; i++) {
+        total_wt += wt[i];
+        total_tat += tat[i];
+        console.log(` ${proc[i].pid}\t${proc[i].bt}\t${wt[i]}\t${tat[i]}`);
+    }
+
+    console.log("Average waiting time =", (total_wt / n).toFixed(1));
+    console.log("Average turn around time =", (total_tat / n).toFixed(1));
+}
+
+// Driver Code with 5 processes
+let proc = [
+    new Process(1, 6, 0), 
+    new Process(2, 2, 1),
+    new Process(3, 8, 2), 
+    new Process(4, 3, 3),
+    new Process(5, 4, 4)
+];
+findAvgTime(proc, proc.length);
 
