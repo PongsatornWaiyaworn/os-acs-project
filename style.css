@@ -1,7 +1,7 @@
 body {
     font-family: "Poppins", sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
+    background-color: #000000;
+    color: #ffffff;
     margin: 0;
     padding: 0;
     display: flex;
@@ -11,14 +11,14 @@ body {
 }
 
 h1 {
-    font-size: 2em;
-    color: #000000;
+    font-size: 3em;
+    color: #ffffff;
     margin-top: 20px;
     margin-bottom: 10px;
 }
 
 h3 {
-    color: #666;
+    color: #bcbcbc;
     font-weight: normal;
     margin: 10px 0;
 }
@@ -35,7 +35,8 @@ h3 {
     font-size: 1em;
     display: flex;
     align-items: center;
-    background-color: #9999;
+    color: #ffffff;
+    background-color: #990F02;
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
@@ -43,8 +44,8 @@ h3 {
 }
 
 .select-algorithm label:hover {
-    color: #ffffff;
-    background-color: #000000;
+    color: #000000;
+    background-color: #ffffff;
 }
 
 /* ส่วน Quantum Time */
@@ -95,7 +96,6 @@ tbody td{
     width: 148px;
 }
 
-
 .arrival-time input,
 .burst-time input,
 .priority input{
@@ -111,7 +111,7 @@ tbody td{
 
 .main-table th {
     background-color: transparent;
-    color: #666;
+    color: #000000;
     border: none;
 }
 
@@ -129,7 +129,7 @@ button.reset-btn,
 button.random-btn,
 button.random-btn,
 button.calculate-btn {
-    background-color: gray;
+    background-color: #000000;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -144,7 +144,7 @@ button.reset-btn:hover,
 button.random-btn:hover,
 button.random-btn:hover,
 button.calculate-btn:hover {
-    background-color: #000000;
+    background-color: #990F02;
 }
 
 /* ไอคอน Delete */
@@ -157,12 +157,12 @@ button.calculate-btn:hover {
 }
 
 .delete-process .material-symbols-outlined {
-    color: #f44336;
+    color: #990F02;
     font-size: 24px;
 }
 
 .delete-process .material-symbols-outlined:hover {
-    color: #d32f2f;
+    color: #000000;
     cursor: pointer;
 }
 
@@ -171,6 +171,7 @@ button.calculate-btn:hover {
     width: 100%;
     max-width: 700px;
     padding: 20px;
+    color: #000000;
     border: 1px solid #ddd;
     background-color: #ffffff;
     border-radius: 8px;
@@ -185,7 +186,7 @@ button.calculate-btn:hover {
 
 #ganttCharts {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
@@ -194,18 +195,18 @@ button.calculate-btn:hover {
 }
 
 .ganttChart {
+    max-width: 100%;
     width: 100%;
     margin: 0;
     padding: 20px;
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .ganttChart h5 {
     font-size: 1.2em;
     margin: 0 0 20px 0;
-    color: #333;
+    color: #000000;
 }
 
 /* Timeline and Tasks */
@@ -221,7 +222,7 @@ button.calculate-btn:hover {
 }
 
 .ganttTask {
-    background-color: #333;
+    background-color: #990F02;
     color: #fff;
     text-align: center;
     padding: 10px 5px;
@@ -235,10 +236,10 @@ button.calculate-btn:hover {
 /* Time Markers */
 .timeMarker {
     position: absolute;
-    bottom: -25px;
+    bottom: 0;
     left: 0;
     font-size: 12px;
-    color: #666;
+    color: #000000;
     transform: translateX(-50%);
     white-space: nowrap;
 }
@@ -248,7 +249,7 @@ button.calculate-btn:hover {
     right: 0;
     bottom: -25px;
     font-size: 12px;
-    color: #666;
+    color: #000000;
     transform: translateX(50%);
     white-space: nowrap;
 }
@@ -263,7 +264,7 @@ button.calculate-btn:hover {
 
 .comparison-title {
     text-align: center;
-    color: #333;
+    color: #ffffff;
     margin-bottom: 30px;
     font-size: 1.5em;
     font-weight: 600;
@@ -272,7 +273,6 @@ button.calculate-btn:hover {
 .comparison-container {
     background: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 20px;
     width: 100%;
     height: auto;
