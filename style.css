@@ -183,53 +183,89 @@ button.calculate-btn:hover {
 
 /*------------------------------------------------------------------------------ */
 
-#ganttCharts, #comparisonChart-hidden {
-    visibility: hidden;
+#ganttCharts {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 0 20px;
 }
 
 .ganttChart {
-    margin: 20px 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .ganttChart h5 {
-    font-size: 18px;
-    margin-bottom: 10px;
+    font-size: 1.2em;
+    margin: 0 0 20px 0;
+    color: #333;
 }
 
-#ganttCharts {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
+/* Timeline and Tasks */
 .timeline {
     position: relative;
     width: 100%;
     display: flex;
-    gap: 3px; 
+    flex-wrap: nowrap;
+    gap: 2px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    padding-bottom: 25px;
 }
 
 .ganttTask {
     background-color: #333;
     color: #fff;
     text-align: center;
-    padding: 5px;
+    padding: 10px 5px;
     position: relative;
+    min-width: 50px;
+    font-size: 0.9em;
+    border-radius: 4px;
+    flex-shrink: 0;
 }
 
+/* Time Markers */
 .timeMarker {
-    font-size: 12px;
     position: absolute;
+    bottom: -25px;
+    left: 0;
+    font-size: 12px;
+    color: #666;
     transform: translateX(-50%);
-    bottom: -20px; 
-    color: #333;
+    white-space: nowrap;
 }
 
 .end-time {
     position: absolute;
     right: 0;
-    bottom: -20px;
-    transform: translateX(50%);
+    bottom: -25px;
     font-size: 12px;
-    color: #333;
+    color: #666;
+    transform: translateX(50%);
+    white-space: nowrap;
+}
+
+/* Comparison Chart */
+#comparisonChart-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#comparisonChart {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 500px;
 }
