@@ -228,7 +228,7 @@ button.calculate-btn:hover {
     position: relative;
     min-width: 50px;
     font-size: 0.9em;
-    border-radius: 4px;
+    border-radius: 3px;
     flex-shrink: 0;
 }
 
@@ -253,19 +253,29 @@ button.calculate-btn:hover {
     white-space: nowrap;
 }
 
-/* Comparison Chart */
-#comparisonChart-container {
+/* Comparison Graph Section */
+#comparisonSection {
     width: 100%;
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
+}
+
+.comparison-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.comparison-container {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 100%;
+    height: auto;
+    position: relative;
 }
 
-#comparisonChart {
-    width: 100% !important;
-    height: auto !important;
-    max-height: 500px;
-}

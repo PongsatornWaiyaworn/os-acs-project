@@ -23,6 +23,7 @@ function runComparison() {
                     results.push({ name: "SRTF", efficiency: efficiency_SRTF, timeline: timeline_SRTF });
                     break;
                 case 'p':
+                    Priority();
                     results.push({ name: "Priority", efficiency: efficiency_P, timeline: timeline_P });
                     break;
                 case 'hrrn':
@@ -39,9 +40,23 @@ function runComparison() {
         });
 
         document.getElementById('ganttCharts').style.visibility = 'visible';
-        document.getElementById('comparisonChart').parentNode.style.visibility = 'visible'
         
-        // แสดงผลลัพธ์ที่เลือก
+        const comparisonSection = document.createElement('div');
+        comparisonSection.id = 'comparisonSection';
+        comparisonSection.innerHTML = `
+            <h3 class="comparison-title">Comparison Graph</h3>
+            <div class="comparison-container">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        `;
+        
+        const existingSection = document.getElementById('comparisonSection');
+        if (existingSection) {
+            existingSection.remove();
+        }
+        
+        document.getElementById('ganttCharts').insertAdjacentElement('afterend', comparisonSection);
+        
         displayGanttCharts(results);
         displayComparisonChart(results);
 
@@ -89,12 +104,18 @@ function displayGanttCharts(results) {
 
 function displayComparisonChart(results) {
     const ctx = document.getElementById('comparisonChart').getContext('2d');
+    
+    const existingChart = Chart.getChart(ctx.canvas);
+    if (existingChart) {
+        existingChart.destroy();
+    }
+
     const labels = results.map(result => result.name);
 
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels, //ชื่อ algorithm ที่เลือก
+            labels: labels,
             datasets: [
                 {
                     label: 'CPU Utilization (%)',
@@ -115,10 +136,12 @@ function displayComparisonChart(results) {
                     label: 'Average Response Time',
                     data: results.map(result => result.efficiency.avgResponseTime),
                     backgroundColor: '#111111'
-                }                
+                }
             ]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -130,7 +153,19 @@ function displayComparisonChart(results) {
             },
             plugins: {
                 legend: {
-                    position: 'top'
+                    position: 'top',
+                    labels: {
+                        padding: 15,
+                        boxWidth: 12
+                    }
+                }
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 0,
+                    bottom: 10
                 }
             }
         }
