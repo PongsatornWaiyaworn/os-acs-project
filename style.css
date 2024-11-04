@@ -12,7 +12,7 @@ body {
 
 h1 {
     font-size: 2em;
-    color: #333;
+    color: #000000;
     margin-top: 20px;
     margin-bottom: 10px;
 }
@@ -35,7 +35,7 @@ h3 {
     font-size: 1em;
     display: flex;
     align-items: center;
-    background-color: #e1ecf4;
+    background-color: #9999;
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
@@ -43,7 +43,8 @@ h3 {
 }
 
 .select-algorithm label:hover {
-    background-color: #c9e0f7;
+    color: #ffffff;
+    background-color: #000000;
 }
 
 /* ส่วน Quantum Time */
@@ -143,7 +144,7 @@ button.reset-btn:hover,
 button.random-btn:hover,
 button.random-btn:hover,
 button.calculate-btn:hover {
-    background-color: #45a049;
+    background-color: #000000;
 }
 
 /* ไอคอน Delete */
@@ -188,6 +189,7 @@ button.calculate-btn:hover {
 
 .ganttChart {
     margin: 20px 0;
+    max-width: 100%;
 }
 
 .ganttChart h5 {
@@ -198,14 +200,16 @@ button.calculate-btn:hover {
 #ganttCharts {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* เพิ่มช่องว่างระหว่างแต่ละ Gantt Chart */
+    gap: 20px;
 }
 
 .timeline {
     position: relative;
-    width: 100%;
+    max-width: 100%;
     display: flex;
-    gap: 3px; /* เพิ่มช่องว่างระหว่างแต่ละ ganttTask */
+    flex-wrap: wrap;
+    gap: 3px; 
+    padding-bottom: 30px;
 }
 
 .ganttTask {
@@ -213,6 +217,7 @@ button.calculate-btn:hover {
     color: #fff;
     text-align: center;
     padding: 5px;
+    margin-bottom: 30px;
     position: relative;
 }
 
@@ -220,7 +225,7 @@ button.calculate-btn:hover {
     font-size: 12px;
     position: absolute;
     transform: translateX(-50%);
-    bottom: -20px; /* Adjust to position the time above the ganttTask */
+    bottom: -20px; 
     color: #333;
 }
 
