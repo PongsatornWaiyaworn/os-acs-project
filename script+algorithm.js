@@ -376,4 +376,90 @@ function MQWF() {
         avgResponseTime: avgResponseTime(result_MQWF) 
     };
 }
+class Process {
+    constructor(pid, bt, art) {
+        this.pid = pid;    
+        this.bt = bt;      
+        this.art = art;    
+    }
+}
+
+function findWaitingTime(proc, n, wt) {
+    let rt = new Array(n);
+   
+    for (let i = 0; i < n; i++) {
+        rt[i] = proc[i].bt;
+    }
+   
+    let complete = 0, t = 0, minm = Number.MAX_VALUE;
+    let shortest = -1, finish_time;
+    let check = false;
+
+    while (complete !== n) {
+        minm = Number.MAX_VALUE;
+        
+        for (let j = 0; j < n; j++) {
+            if ((proc[j].art <= t) && (rt[j] < minm) && rt[j] > 0) {
+                minm = rt[j];
+                shortest = j;
+                check = true;
+            }
+        }
+
+        if (!check) {
+            t++;
+            continue;
+        }
+
+        rt[shortest]--;
+
+        if (rt[shortest] === 0) {
+            complete++;
+            check = false;
+
+            finish_time = t + 1;
+            wt[shortest] = finish_time - proc[shortest].bt - proc[shortest].art;
+
+            if (wt[shortest] < 0) {
+                wt[shortest] = 0;
+            }
+        }
+        
+        t++;
+    }
+}
+
+function findTurnAroundTime(proc, n, wt, tat) {
+    for (let i = 0; i < n; i++) {
+        tat[i] = proc[i].bt + wt[i];
+    }
+}
+
+function findAvgTime(proc, n) {
+    let wt = new Array(n), tat = new Array(n);
+    let total_wt = 0, total_tat = 0;
+
+    findWaitingTime(proc, n, wt);
+    findTurnAroundTime(proc, n, wt, tat);
+
+    console.log("P\tBT\tWT\tTAT");
+
+    for (let i = 0; i < n; i++) {
+        total_wt += wt[i];
+        total_tat += tat[i];
+        console.log(` ${proc[i].pid}\t${proc[i].bt}\t${wt[i]}\t${tat[i]}`);
+    }
+
+    console.log("Average waiting time =", (total_wt / n).toFixed(1));
+    console.log("Average turn around time =", (total_tat / n).toFixed(1));
+}
+
+let proc = [
+    new Process(1, 6, 0), 
+    new Process(2, 2, 1),
+    new Process(3, 8, 2), 
+    new Process(4, 3, 3),
+    new Process(5, 4, 4)
+];
+findAvgTime(proc, proc.length);
 
