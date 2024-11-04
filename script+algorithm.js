@@ -64,7 +64,7 @@ function randomProcess() {
     let arrival, burst, priority, processId;
     
     for(let i = 0; i < numRandom; i++) {
-        arrival = Math.floor(Math.random() * Math.floor(numRandom * 1.5));
+        arrival = Math.floor(Math.random() * (numRandom * 5));
         burst = Math.floor(Math.random() * 50) + 1;
         priority = Math.floor(Math.random() * 5) + 1;
         processId = `P${countAddProcess}`;
@@ -210,25 +210,31 @@ function RR() {
     queue.push(...copy_process);
     
     while (queue.length > 0) {
-        let currentProcess = queue.shift();
+        currentProcess = queue.shift();
+    
+        if (currentProcess.arrivalTime > currentTime) {
+            currentTime = currentProcess.arrivalTime;
+        }
+    
         let startTime = currentTime;
-        
+    
         if (firstExecutionTime[currentProcess.name] === null) {
             firstExecutionTime[currentProcess.name] = startTime;
         }
-
+    
         let timeToExecute = Math.min(quantumtime, remainingBurst[currentProcess.name]);
         currentTime += timeToExecute;
         remainingBurst[currentProcess.name] -= timeToExecute;
-        
+    
         timeline_RR.push({ name: currentProcess.name, start: startTime, end: currentTime });
-        
-        if (remainingBurst[currentProcess.name] === 0) { // ถ้า process ทำงานเสร็จ
+    
+        if (remainingBurst[currentProcess.name] === 0) { 
+            // ถ้า process ทำงานเสร็จ
             let completionTime = currentTime;
             let turnAroundTime = completionTime - currentProcess.arrivalTime;
             let waitingTime = turnAroundTime - currentProcess.burstTime;
             let responseTime = firstExecutionTime[currentProcess.name] - currentProcess.arrivalTime;
-
+    
             result_RR.push({
                 name: currentProcess.name,
                 arrivalTime: currentProcess.arrivalTime,
@@ -238,12 +244,12 @@ function RR() {
                 waitingTime: waitingTime,
                 responseTime: responseTime 
             });
-            
+    
             lastCompletionTime = completionTime;
-        } else if (remainingBurst[currentProcess.name] > 0) { // ถ้ายังไม่เสร็จก็เพิ่มกลับเข้าคิว
+        } else if (remainingBurst[currentProcess.name] > 0) {
             queue.push(currentProcess);
         }
-
+    
         currentTime += contextSwitch;
     }
     
@@ -295,39 +301,45 @@ function MQWF() {
     
     copy_process.forEach(process => {
         remainingBurst[process.name] = process.burstTime;
-        firstExecutionTime[process.name] = null; // กำหนดค่าเริ่มต้นเป็น null
+        firstExecutionTime[process.name] = null; 
     });
     
     while (queues.some(queue => queue.processes.length > 0)) {
         let foundProcess = false;
-        
+    
         for (let i = 0; i < queues.length; i++) {
             let queue = queues[i];
-            
+    
             if (queue.processes.length > 0) {
+                let currentProcess = queue.processes[0]; 
+    
+                if (currentProcess.arrivalTime > currentTime) {
+                    currentTime = currentProcess.arrivalTime;
+                }
+    
                 foundProcess = true;
-                let currentProcess = queue.processes.shift();
+                currentProcess = queue.processes.shift();
                 let startTime = currentTime;
-                
+    
                 if (firstExecutionTime[currentProcess.name] === null) {
                     firstExecutionTime[currentProcess.name] = startTime;
                 }
-
-                let timeToExecute = queue.quantum > 0 
-                ? Math.min(queue.quantum, remainingBurst[currentProcess.name])
-                : remainingBurst[currentProcess.name]; //ถ้า quantum เป็น 0 ก็จะให้ timeToExecute เป็น remainingBurst ที่เหลือ (เป็นการทำ FCFS)
-                
+    
+                let timeToExecute = queue.quantum > 0
+                    ? Math.min(queue.quantum, remainingBurst[currentProcess.name])
+                    : remainingBurst[currentProcess.name];
+    
                 currentTime += timeToExecute;
                 remainingBurst[currentProcess.name] -= timeToExecute;
-                
+    
                 timeline_MQWF.push({ name: currentProcess.name, start: startTime, end: currentTime });
-                
+    
                 if (remainingBurst[currentProcess.name] === 0) {
                     let completionTime = currentTime;
                     let turnAroundTime = completionTime - currentProcess.arrivalTime;
                     let waitingTime = turnAroundTime - currentProcess.burstTime;
                     let responseTime = firstExecutionTime[currentProcess.name] - currentProcess.arrivalTime;
-
+    
                     result_MQWF.push({
                         name: currentProcess.name,
                         arrivalTime: currentProcess.arrivalTime,
@@ -337,27 +349,23 @@ function MQWF() {
                         waitingTime: waitingTime,
                         responseTime: responseTime 
                     });
-                    
+    
                     lastCompletionTime = completionTime;
                 } else {
-                    // process ยังไม่เสร็จ จะถูกย้ายไปคิวต่อไป(ถ้าไม่ใช่คิวสุดท้าย)
                     if (i + 1 < queues.length) {
                         queues[i + 1].processes.push(currentProcess);
                     }
                 }
-                
                 break;
             }
         }
-        
+    
         if (!foundProcess) {
-            // ถ้าไม่มี process ในคิวใด ๆ ให้ currentTime เลื่อนไปยัง arrivalTime ของ process ต่อไป
             currentTime = Math.max(currentTime, copy_process[0]?.arrivalTime || currentTime);
         }
-
+    
         currentTime += contextSwitch;
-
-    }
+    }    
     
     efficiency_MQWF = {
         CPUutilization: CPUutilizationCal(lastCompletionTime),
