@@ -64,7 +64,7 @@ function displayGanttCharts(results) {
         const timelineDiv = document.createElement('div');
         timelineDiv.classList.add('timeline');
 
-        // เพิ่มเฉพาะเวลาเริ่มต้นที่ 0 ที่จุดเริ่มต้นของแถบ Gantt
+        // เพิ่มเฉพาะเวลาเริ่มต้นของ Gantt
         const startMarker = document.createElement('span');
         startMarker.classList.add('timeMarker');
         startMarker.style.left = `0%`;
@@ -109,12 +109,12 @@ function displayComparisonChart(results) {
                 {
                     label: 'Average Turnaround Time',
                     data: results.map(result => result.efficiency.avgTurnAroundTime),
-                    backgroundColor: '#242424'
+                    backgroundColor: '#555555'
                 },
                 {
                     label: 'Average Response Time',
                     data: results.map(result => result.efficiency.avgResponseTime),
-                    backgroundColor: '#000000'
+                    backgroundColor: '#111111'
                 }                
             ]
         },
