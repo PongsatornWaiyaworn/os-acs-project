@@ -379,93 +379,6 @@ function MQWF() {
         avgResponseTime: avgResponseTime(result_MQWF) 
     };
 }
-class Process {
-    constructor(pid, bt, art) {
-        this.pid = pid;    
-        this.bt = bt;      
-        this.art = art;    
-    }
-}
-
-function findWaitingTime(proc, n, wt) {
-    let rt = new Array(n);
-   
-    for (let i = 0; i < n; i++) {
-        rt[i] = proc[i].bt;
-    }
-   
-    let complete = 0, t = 0, minm = Number.MAX_VALUE;
-    let shortest = -1, finish_time;
-    let check = false;
-
-    while (complete !== n) {
-        minm = Number.MAX_VALUE;
-        
-        for (let j = 0; j < n; j++) {
-            if ((proc[j].art <= t) && (rt[j] < minm) && rt[j] > 0) {
-                minm = rt[j];
-                shortest = j;
-                check = true;
-            }
-        }
-
-        if (!check) {
-            t++;
-            continue;
-        }
-
-        rt[shortest]--;
-
-        if (rt[shortest] === 0) {
-            complete++;
-            check = false;
-
-            finish_time = t + 1;
-            wt[shortest] = finish_time - proc[shortest].bt - proc[shortest].art;
-
-            if (wt[shortest] < 0) {
-                wt[shortest] = 0;
-            }
-        }
-        
-        t++;
-    }
-}
-
-function findTurnAroundTime(proc, n, wt, tat) {
-    for (let i = 0; i < n; i++) {
-        tat[i] = proc[i].bt + wt[i];
-    }
-}
-
-function findAvgTime(proc, n) {
-    let wt = new Array(n), tat = new Array(n);
-    let total_wt = 0, total_tat = 0;
-
-    findWaitingTime(proc, n, wt);
-    findTurnAroundTime(proc, n, wt, tat);
-
-    console.log("P\tBT\tWT\tTAT");
-
-    for (let i = 0; i < n; i++) {
-        total_wt += wt[i];
-        total_tat += tat[i];
-        console.log(` ${proc[i].pid}\t${proc[i].bt}\t${wt[i]}\t${tat[i]}`);
-    }
-
-    console.log("Average waiting time =", (total_wt / n).toFixed(1));
-    console.log("Average turn around time =", (total_tat / n).toFixed(1));
-}
-
-let proc = [
-    new Process(1, 6, 0), 
-    new Process(2, 2, 1),
-    new Process(3, 8, 2), 
-    new Process(4, 3, 3),
-    new Process(5, 4, 4)
-];
-findAvgTime(proc, proc.length);
-
 
 function SJF() {
     let copy_process = sortArrivaltime(processes).slice(); // เรียงโปรเซสตามเวลาที่เข้ามา
@@ -534,7 +447,7 @@ function HRRN() {
     efficiency_HRRN = {};
     let currentTime = 0;
     let lastCompletionTime = 0;
-    let copy_process = sortArrivaltime(processes).slice(); // คัดลอกและเรียงตามเวลามาถึง
+    let copy_process = sortArrivaltime(processes).slice(); 
 
     while (copy_process.length > 0) {
         // กรองกระบวนการที่สามารถเข้าถึงได้
@@ -573,7 +486,6 @@ function HRRN() {
         let waitingTime = turnAroundTime - selectedProcess.burstTime;
         let responseTime = completionTime - selectedProcess.arrivalTime - selectedProcess.burstTime;
 
-        // บันทึกผลลัพธ์
         result_HRRN.push({
             name: selectedProcess.name,
             arrivalTime: selectedProcess.arrivalTime,
@@ -588,10 +500,9 @@ function HRRN() {
 
         // ลบโปรเซสที่เลือกออกจากคัดลอก
         copy_process = copy_process.filter(process => process.name !== selectedProcess.name);
-        lastCompletionTime = completionTime; // อัปเดตเวลาที่เสร็จสิ้นล่าสุด
+        lastCompletionTime = completionTime; 
     }    
 
-    // คำนวณประสิทธิภาพ
     efficiency_HRRN = {
         CPUutilization: CPUutilizationCal(lastCompletionTime),
         Throughput: ThroughputCal(result_HRRN.length, lastCompletionTime),
@@ -600,3 +511,63 @@ function HRRN() {
         avgResponseTime: avgResponseTime(result_HRRN) 
     };
 }
+
+function Priority() {
+    let copy_process = sortArrivaltime(processes).slice();
+    let currentTime = 0;
+    let lastCompletionTime = 0;
+    
+    result_P = []; 
+    timeline_P = [];
+    efficiency_P = {};
+
+    while (copy_process.length > 0) {
+        // หาโปรเซสที่พร้อมทำงาน (arrivalTime <= currentTime) และมี Priority สูงที่สุด (priority ต่ำสุด)
+        let availableProcesses = copy_process.filter(process => process.arrivalTime <= currentTime);
+        
+        if (availableProcesses.length === 0) {
+            // หากไม่มีโปรเซสที่พร้อมทำงาน ให้เพิ่ม currentTime ไปยังเวลาที่มีโปรเซสเข้ามาใหม่
+            currentTime = copy_process[0].arrivalTime;
+            continue;
+        }
+
+        // เรียงโปรเซสตาม priority (ค่า priority ที่น้อยกว่าแสดงถึง priority สูงกว่า)
+        availableProcesses.sort((a, b) => a.priority - b.priority);
+        let currentProcess = availableProcesses[0]; // เลือกโปรเซสที่มี priority สูงสุด
+
+        // คำนวณเวลาทำงานของโปรเซส
+        let startTime = currentTime;
+        let completionTime = startTime + currentProcess.burstTime;
+        let turnAroundTime = completionTime - currentProcess.arrivalTime;
+        let waitingTime = turnAroundTime - currentProcess.burstTime;
+        let responseTime = startTime - currentProcess.arrivalTime;
+
+        result_P.push({
+            name: currentProcess.name,
+            completionTime: completionTime,
+            turnAroundTime: turnAroundTime,
+            waitingTime: waitingTime,
+            responseTime: responseTime
+        });
+
+        timeline_P.push({ 
+            name: currentProcess.name, 
+            start: startTime, 
+            end: completionTime 
+        });
+
+        // อัปเดตเวลา currentTime และลบโปรเซสที่เสร็จสิ้นออกจากคิว
+        currentTime = completionTime + contextSwitch;
+        lastCompletionTime = completionTime;
+        copy_process = copy_process.filter(process => process.name !== currentProcess.name);
+    }
+
+    efficiency_P = {
+        CPUutilization: CPUutilizationCal(lastCompletionTime),
+        Throughput: ThroughputCal(timeline_P.length, lastCompletionTime),
+        avgTurnAroundTime: avgTurnAroundTime(result_P),
+        avgWaitingTime: avgWaitingTime(result_P),
+        avgResponseTime: avgResponseTime(result_P)
+    };
+}
+
