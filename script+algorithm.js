@@ -570,4 +570,115 @@ function Priority() {
         avgResponseTime: avgResponseTime(result_P)
     };
 }
+class Process {
+    constructor(name, arrivalTime, burstTime, priority) {
+        this.name = name;
+        this.arrivalTime = arrivalTime;
+        this.burstTime = burstTime;
+        this.remainingTime = burstTime;
+        this.priority = priority;
+        this.completionTime = 0;
+        this.turnaroundTime = 0;
+        this.waitingTime = 0;
+    }
+}
+
+function srtf(processes) {
+    let time = 0;
+    let completedProcesses = 0;
+    let n = processes.length;
+
+    let result_SRTF = []; // Store final results for each process
+    let timeline_SRTF = []; // Track which process is running at each time unit
+
+    while (completedProcesses < n) {
+        // Select the process with the shortest remaining time at the current time
+        let shortestProcess = null;
+
+        for (let process of processes) {
+            if (
+                process.arrivalTime <= time &&
+                process.remainingTime > 0 &&
+                (!shortestProcess || process.remainingTime < shortestProcess.remainingTime)
+            ) {
+                shortestProcess = process;
+            }
+        }
+
+        if (!shortestProcess) {
+            // If no process is ready, advance time
+            timeline_SRTF.push("Idle"); // Track idle time in the timeline
+            time++;
+            continue;
+        }
+
+        // Execute the selected process
+        timeline_SRTF.push(shortestProcess.name); // Track the process name in the timeline
+        shortestProcess.remainingTime--;
+        time++;
+
+        // Check if the process is completed
+        if (shortestProcess.remainingTime === 0) {
+            shortestProcess.completionTime = time;
+            shortestProcess.turnaroundTime = shortestProcess.completionTime - shortestProcess.arrivalTime;
+            shortestProcess.waitingTime = shortestProcess.turnaroundTime - shortestProcess.burstTime;
+            completedProcesses++;
+
+            // Store the completed process result in result_SRTF array
+            result_SRTF.push({
+                name: shortestProcess.name,
+                arrivalTime: shortestProcess.arrivalTime,
+                burstTime: shortestProcess.burstTime,
+                priority: shortestProcess.priority,
+                completionTime: shortestProcess.completionTime,
+                turnaroundTime: shortestProcess.turnaroundTime,
+                waitingTime: shortestProcess.waitingTime
+            });
+        }
+    }
+
+    // Calculate Efficiency Metrics
+    let totalTurnaroundTime = 0;
+    let totalWaitingTime = 0;
+    let totalBurstTime = 0;
+
+    for (let process of processes) {
+        totalTurnaroundTime += process.turnaroundTime;
+        totalWaitingTime += process.waitingTime;
+        totalBurstTime += process.burstTime;
+    }
+
+    let avgTurnaroundTime = totalTurnaroundTime / n;
+    let avgWaitingTime = totalWaitingTime / n;
+    let cpuUtilization = (totalBurstTime / time) * 100; // CPU utilization in percentage
+
+    let efficiency_SRTF = {
+        avgTurnaroundTime: avgTurnaroundTime,
+        avgWaitingTime: avgWaitingTime,
+        cpuUtilization: cpuUtilization
+    };
+
+    return { result_SRTF, timeline_SRTF, efficiency_SRTF };
+}
+
+// Example usage:
+let processesInput = [
+    { name: "p1", arrivalTime: 0, burstTime: 5, priority: 1 },
+    { name: "p2", arrivalTime: 1, burstTime: 8, priority: 0 },
+    { name: "p3", arrivalTime: 2, burstTime: 6, priority: 2 },
+];
+
+// Convert input objects to Process instances
+let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
+
+let { result_SRTF, timeline_SRTF, efficiency_SRTF } = srtf(processes);
+
+console.log("Process Results:");
+console.table(result_SRTF);
+
+console.log("\nTimeline (Process name at each time unit):");
+console.log(timeline_SRTF);
+
+console.log("\nEfficiency Metrics:");
+console.log(efficiency_SRTF);
 
