@@ -570,6 +570,7 @@ function Priority() {
         avgResponseTime: avgResponseTime(result_P)
     };
 }
+
 class Process {
     constructor(name, arrivalTime, burstTime, priority) {
         this.name = name;
@@ -583,7 +584,10 @@ class Process {
     }
 }
 
-function srtf(processes) {
+function srtf(processesInput) {
+    // Convert input objects to Process instances
+    let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
+
     let time = 0;
     let completedProcesses = 0;
     let n = processes.length;
@@ -668,10 +672,7 @@ let processesInput = [
     { name: "p3", arrivalTime: 2, burstTime: 6, priority: 2 },
 ];
 
-// Convert input objects to Process instances
-let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
-
-let { result_SRTF, timeline_SRTF, efficiency_SRTF } = srtf(processes);
+let { result_SRTF, timeline_SRTF, efficiency_SRTF } = srtf(processesInput);
 
 console.log("Process Results:");
 console.table(result_SRTF);
@@ -681,4 +682,5 @@ console.log(timeline_SRTF);
 
 console.log("\nEfficiency Metrics:");
 console.log(efficiency_SRTF);
+
 
