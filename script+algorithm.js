@@ -568,19 +568,6 @@ function Priority() {
     };
 }
 // Define a Process class to handle each process's properties
-class Process {
-    constructor(name, arrivalTime, burstTime, priority) {
-        this.name = name;
-        this.arrivalTime = arrivalTime;
-        this.burstTime = burstTime;
-        this.priority = priority;
-        this.remainingTime = burstTime; // Initialize remaining time with burst time
-        this.completionTime = 0;
-        this.turnaroundTime = 0;
-        this.waitingTime = 0;
-    }
-}
-
 function srtf(processesInput) {
     // Convert input objects to Process instances
     let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
