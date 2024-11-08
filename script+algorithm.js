@@ -575,9 +575,9 @@ function srtf() {
     result_SRTF = [];
     timeline_SRTF = [];
     efficiency_SRTF = {};
-    let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
-    let time = 0;
-    let completedProcesses = 0;
+    let copy_process = sortArrivaltime(processes).slice(); // เรียงโปรเซสตามเวลาที่เข้ามา
+    let currentTime = 0;
+    let lastCompletionTime = 0;
     let n = processes.length;
     while (completedProcesses < n) {
         // Select the process with the shortest remaining time at the current time
