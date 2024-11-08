@@ -570,17 +570,15 @@ function Priority() {
         avgResponseTime: avgResponseTime(result_P)
     };
 }
-function srtf(processesInput) {
+function srtf() {
     // Convert input objects to Process instances
+    result_SRTF = [];
+    timeline_SRTF = [];
+    efficiency_SRTF = {};
     let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
-
     let time = 0;
     let completedProcesses = 0;
     let n = processes.length;
-
-    let result_SRTF = []; // Store final results for each process
-    let timeline_SRTF = []; // Track which process is running at each time unit
-
     while (completedProcesses < n) {
         // Select the process with the shortest remaining time at the current time
         let shortestProcess = null;
