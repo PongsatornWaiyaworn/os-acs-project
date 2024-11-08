@@ -567,16 +567,33 @@ function Priority() {
         avgResponseTime: avgResponseTime(result_P)
     };
 }
-function srtf() {
-    result_SRTF = [];
-    timeline_SRTF = [];
-    efficiency_SRTF = {};
-    let copy_process = sortArrivaltime(processes).slice();
-    let currentTime = 0;
-    let lastCompletionTime = 0;
-    let n = processes.length;
-    while (completedProcesses < n) {
+// Define a Process class to handle each process's properties
+class Process {
+    constructor(name, arrivalTime, burstTime, priority) {
+        this.name = name;
+        this.arrivalTime = arrivalTime;
+        this.burstTime = burstTime;
+        this.priority = priority;
+        this.remainingTime = burstTime; // Initialize remaining time with burst time
+        this.completionTime = 0;
+        this.turnaroundTime = 0;
+        this.waitingTime = 0;
+    }
+}
 
+function srtf(processesInput) {
+    // Convert input objects to Process instances
+    let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
+
+    let time = 0;
+    let completedProcesses = 0;
+    let n = processes.length;
+
+    let result_SRTF = []; // Store final results for each process
+    let timeline_SRTF = []; // Track which process is running at each time unit
+
+    while (completedProcesses < n) {
+        // Select the process with the shortest remaining time at the current time
         let shortestProcess = null;
 
         for (let process of processes) {
@@ -662,5 +679,6 @@ console.log(timeline_SRTF);
 
 console.log("\nEfficiency Metrics:");
 console.log(efficiency_SRTF);
+
 
 
