@@ -575,7 +575,7 @@ function srtf() {
     result_SRTF = [];
     timeline_SRTF = [];
     efficiency_SRTF = {};
-    let copy_process = sortArrivaltime(processes).slice(); // เรียงโปรเซสตามเวลาที่เข้ามา
+    let copy_process = sortArrivaltime(processes).slice();
     let currentTime = 0;
     let lastCompletionTime = 0;
     let n = processes.length;
