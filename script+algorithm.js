@@ -571,7 +571,6 @@ function Priority() {
     };
 }
 function srtf() {
-    // Convert input objects to Process instances
     result_SRTF = [];
     timeline_SRTF = [];
     efficiency_SRTF = {};
@@ -580,7 +579,7 @@ function srtf() {
     let lastCompletionTime = 0;
     let n = processes.length;
     while (completedProcesses < n) {
-        // Select the process with the shortest remaining time at the current time
+
         let shortestProcess = null;
 
         for (let process of processes) {
