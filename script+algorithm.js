@@ -570,110 +570,94 @@ function Priority() {
         avgResponseTime: avgResponseTime(result_P)
     };
 }
-function srtf(processesInput) {
-    // Initialize processes with remainingTime set to burstTime
-    let processes = processesInput.map(p => ({
-        ...p,
-        remainingTime: p.burstTime,
-        completionTime: 0,
-        turnaroundTime: 0,
-        waitingTime: 0
-    }));
+function SRTF() {
+    let copy_process = sortArrivaltime(processes).slice();
+    let currentTime = 0;
+    let lastCompletionTime = 0;
+    result_SRTF = [];
+    timeline_SRTF = [];
+    efficiency_SRTF = {};
 
-    let time = 0;
-    let completedProcesses = 0;
-    let n = processes.length;
+    let remainingBurst = {};
+    let firstExecutionTime = {};
+    let completedProcesses = new Set();
+    let currentTimelineEntry = null;
 
-    let result_SRTF = []; // Store final results for each process
-    let timeline_SRTF = []; // Track which process is running at each time unit
+    copy_process.forEach(process => {
+        remainingBurst[process.name] = process.burstTime;
+        firstExecutionTime[process.name] = null;
+    });
 
-    while (completedProcesses < n) {
-        // Select the process with the shortest remaining time at the current time
-        let shortestProcess = null;
+    while (completedProcesses.size < processes.length) {
+        let availableProcesses = copy_process.filter(
+            process => process.arrivalTime <= currentTime && !completedProcesses.has(process.name)
+        );
 
-        for (let process of processes) {
-            if (
-                process.arrivalTime <= time &&
-                process.remainingTime > 0 &&
-                (!shortestProcess || process.remainingTime < shortestProcess.remainingTime)
-            ) {
-                shortestProcess = process;
-            }
-        }
-
-        if (!shortestProcess) {
-            // If no process is ready, advance time
-            timeline_SRTF.push("Idle"); // Track idle time in the timeline
-            time++;
-            continue;
-        }
-
-        // Execute the selected process
-        timeline_SRTF.push(shortestProcess.name); // Track the process name in the timeline
-        shortestProcess.remainingTime--;
-        time++;
-
-        // Check if the process is completed
-        if (shortestProcess.remainingTime === 0) {
-            shortestProcess.completionTime = time;
-            shortestProcess.turnaroundTime = shortestProcess.completionTime - shortestProcess.arrivalTime;
-            shortestProcess.waitingTime = shortestProcess.turnaroundTime - shortestProcess.burstTime;
-            completedProcesses++;
-
-            // Store the completed process result in result_SRTF array
-            result_SRTF.push({
-                name: shortestProcess.name,
-                arrivalTime: shortestProcess.arrivalTime,
-                burstTime: shortestProcess.burstTime,
-                priority: shortestProcess.priority,
-                completionTime: shortestProcess.completionTime,
-                turnaroundTime: shortestProcess.turnaroundTime,
-                waitingTime: shortestProcess.waitingTime
+        if (availableProcesses.length > 0) {
+            let currentProcess = availableProcesses.reduce((minProcess, process) => {
+                return remainingBurst[process.name] < remainingBurst[minProcess.name] ? process : minProcess;
             });
+
+            let startTime = currentTime;
+
+            if (firstExecutionTime[currentProcess.name] === null) {
+                firstExecutionTime[currentProcess.name] = startTime;
+            }
+
+            // Execute process for 1 time unit
+            currentTime += 1;
+            remainingBurst[currentProcess.name] -= 1;
+
+            // If it's a new entry or a different process, finalize the previous entry and start a new one
+            if (!currentTimelineEntry || currentTimelineEntry.name !== currentProcess.name) {
+                if (currentTimelineEntry) {
+                    currentTimelineEntry.end = startTime;
+                    timeline_SRTF.push(currentTimelineEntry);
+                }
+                currentTimelineEntry = { name: currentProcess.name, start: startTime, end: null };
+            }
+
+            // Check if the process is completed
+            if (remainingBurst[currentProcess.name] === 0) {
+                let completionTime = currentTime;
+                let turnAroundTime = completionTime - currentProcess.arrivalTime;
+                let waitingTime = turnAroundTime - currentProcess.burstTime;
+                let responseTime = firstExecutionTime[currentProcess.name] - currentProcess.arrivalTime;
+
+                result_SRTF.push({
+                    name: currentProcess.name,
+                    arrivalTime: currentProcess.arrivalTime,
+                    burstTime: currentProcess.burstTime,
+                    completionTime: completionTime,
+                    turnAroundTime: turnAroundTime,
+                    waitingTime: waitingTime,
+                    responseTime: responseTime
+                });
+
+                completedProcesses.add(currentProcess.name);
+                lastCompletionTime = completionTime;
+
+                // Finalize the timeline entry for the completed process
+                currentTimelineEntry.end = currentTime;
+                timeline_SRTF.push(currentTimelineEntry);
+                currentTimelineEntry = null;
+            }
+        } else {
+            currentTime++;
         }
+
+        currentTime += contextSwitch;
     }
 
-    // Calculate Efficiency Metrics
-    let totalTurnaroundTime = 0;
-    let totalWaitingTime = 0;
-    let totalBurstTime = 0;
-
-    for (let process of processes) {
-        totalTurnaroundTime += process.turnaroundTime;
-        totalWaitingTime += process.waitingTime;
-        totalBurstTime += process.burstTime;
-    }
-
-    let avgTurnaroundTime = totalTurnaroundTime / n;
-    let avgWaitingTime = totalWaitingTime / n;
-    let cpuUtilization = (totalBurstTime / time) * 100; // CPU utilization in percentage
-
-    let efficiency_SRTF = {
-        avgTurnaroundTime: avgTurnaroundTime,
-        avgWaitingTime: avgWaitingTime,
-        cpuUtilization: cpuUtilization
+    efficiency_SRTF = {
+        CPUutilization: CPUutilizationCal(lastCompletionTime),
+        Throughput: ThroughputCal(result_SRTF.length, lastCompletionTime),
+        avgTurnAroundTime: avgTurnAroundTime(result_SRTF),
+        avgWaitingTime: avgWaitingTime(result_SRTF),
+        avgResponseTime: avgResponseTime(result_SRTF)
     };
-
-    return { result_SRTF, timeline_SRTF, efficiency_SRTF };
 }
 
-// Example usage:
-let processesInput = [
-    { name: "p1", arrivalTime: 0, burstTime: 5, priority: 1 },
-    { name: "p2", arrivalTime: 1, burstTime: 8, priority: 0 },
-    { name: "p3", arrivalTime: 2, burstTime: 6, priority: 2 },
-];
-
-let { result_SRTF, timeline_SRTF, efficiency_SRTF } = srtf(processesInput);
-
-console.log("Process Results:");
-console.table(result_SRTF);
-
-console.log("\nTimeline (Process name at each time unit):");
-console.log(timeline_SRTF);
-
-console.log("\nEfficiency Metrics:");
-console.log(efficiency_SRTF);
 
 
 
