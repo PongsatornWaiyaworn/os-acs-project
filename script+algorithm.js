@@ -570,10 +570,15 @@ function Priority() {
         avgResponseTime: avgResponseTime(result_P)
     };
 }
-// Define a Process class to handle each process's properties
 function srtf(processesInput) {
-    // Convert input objects to Process instances
-    let processes = processesInput.map(p => new Process(p.name, p.arrivalTime, p.burstTime, p.priority));
+    // Initialize processes with remainingTime set to burstTime
+    let processes = processesInput.map(p => ({
+        ...p,
+        remainingTime: p.burstTime,
+        completionTime: 0,
+        turnaroundTime: 0,
+        waitingTime: 0
+    }));
 
     let time = 0;
     let completedProcesses = 0;
@@ -669,6 +674,7 @@ console.log(timeline_SRTF);
 
 console.log("\nEfficiency Metrics:");
 console.log(efficiency_SRTF);
+
 
 
 
