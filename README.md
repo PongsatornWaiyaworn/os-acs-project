@@ -2,13 +2,10 @@
 
 The program simulates and compares the performance of seven Process Scheduling Algorithms: First-Come, First-Serve (FCFS), Round-Robin (RR), Shortest Job First (SJF), Shortest Remaining Time First (SRTF), Priority Scheduling, Highest Response Ratio Next (HRRN), and Multilevel Queue with Feedback.
 
-## How to run
+## How to use
 
-1. Clone this repository
-```bash
-    git clone https://github.com/PongsatornWaiyaworn/os-acs-project-Scheduler.git
-```
-2. Open `index.html` in your browser to start the application.
+1. Visit the deployed application by clicking the following link: https://pongsatornwaiyaworn.github.io/os-acs-project-Scheduler/
+2. You can start using the application directly in your browser.
 
 ## Usage
 
